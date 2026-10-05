@@ -1,0 +1,33 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+# data + run artefacts are large; never commit
+data/
+runs/
+!data/.gitkeep
+!runs/.gitkeep
+.ipynb_checkpoints/
+*.tif
+*.tiff
+*.safetensors
+*.pt
+*.bin
+.env
+
+# local editor settings
+.vscode/
+
+# demo scenes are reproducible from tools/make_demo_scenes.py (fixed seed)
+demo/
+
+# ORCA: the bundled demo datasets ARE source (regenerate with tools/make_orca_demo.py); caches/imports/official GIS are local
+!orca/data/
+orca/data/cache/*
+!orca/data/cache/.gitkeep
+orca/data/imports/
+orca/data/geofences_official.json

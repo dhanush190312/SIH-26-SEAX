@@ -1,0 +1,719 @@
+{
+ "meta": {
+  "about": "Controlled test set for the SEAX/ORCA prototype. Cases were written by the developer against the bundled SYNTHETIC demo data; results measure whether the prototype behaves as designed on these cases. They are NOT an estimate of real-world accuracy. The 'paraphrase' tag marks phrasings deliberately NOT tuned for - they measure the rule-based planner's generalisation.",
+  "fixed_clock": "2026-09-30T10:00:00+05:30"
+ },
+ "cases": [
+  {
+   "id": "go-6am",
+   "session": "a",
+   "tags": [
+    "core",
+    "conditions"
+   ],
+   "query": "Can I go fishing tomorrow at 6 AM from Nagapattinam?",
+   "expect": {
+    "intent": "go_no_go",
+    "tools": [
+     "get_marine_weather",
+     "get_advisories",
+     "check_geofence"
+    ],
+    "place": "nagapattinam",
+    "times": [
+     "06:00"
+    ],
+    "state": "LOWER_RISK",
+    "contains": [
+     "0.9 m",
+     "14 km/h"
+    ],
+    "not_contains": [
+     "safe to go"
+    ]
+   }
+  },
+  {
+   "id": "go-10am-conflict",
+   "session": "b",
+   "tags": [
+    "core",
+    "conditions",
+    "conflict"
+   ],
+   "query": "Can I fish tomorrow at 10 AM from Nagapattinam?",
+   "expect": {
+    "intent": "go_no_go",
+    "tools": [
+     "get_marine_weather",
+     "get_advisories"
+    ],
+    "place": "nagapattinam",
+    "times": [
+     "10:00"
+    ],
+    "state": "MODERATE_CONDITIONS",
+    "contains": [
+     "Source disagreement",
+     "1.41 m",
+     "2.1 m"
+    ]
+   }
+  },
+  {
+   "id": "go-2pm-advisory",
+   "session": "c",
+   "tags": [
+    "core",
+    "conditions"
+   ],
+   "query": "Can I fish tomorrow at 2 PM from Nagapattinam?",
+   "expect": {
+    "intent": "go_no_go",
+    "place": "nagapattinam",
+    "times": [
+     "14:00"
+    ],
+    "state": "MODERATE_CONDITIONS"
+   }
+  },
+  {
+   "id": "sea-morning",
+   "session": "d",
+   "tags": [
+    "core",
+    "conditions"
+   ],
+   "query": "What are the sea conditions tomorrow morning near Nagapattinam?",
+   "expect": {
+    "intent": "sea_conditions",
+    "tools": [
+     "get_marine_weather",
+     "get_ocean_conditions"
+    ],
+    "place": "nagapattinam",
+    "times": [
+     "06:00",
+     "08:00",
+     "10:00"
+    ],
+    "contains": [
+     "SST 29.1 °C"
+    ]
+   }
+  },
+  {
+   "id": "hazard-morning",
+   "session": "e",
+   "tags": [
+    "core",
+    "hazard"
+   ],
+   "query": "Are there dangerous marine conditions tomorrow morning near Nagapattinam?",
+   "expect": {
+    "intent": "hazard",
+    "tools": [
+     "get_marine_weather",
+     "get_advisories"
+    ],
+    "place": "nagapattinam",
+    "times": [
+     "06:00",
+     "08:00",
+     "10:00"
+    ],
+    "contains": [
+     "Hazards found elsewhere"
+    ]
+   }
+  },
+  {
+   "id": "pfz-list",
+   "session": "f",
+   "tags": [
+    "core",
+    "pfz"
+   ],
+   "query": "Show potential fishing zones near Nagapattinam tomorrow morning.",
+   "expect": {
+    "intent": "pfz_zones",
+    "tools": [
+     "get_pfz_candidates",
+     "get_ocean_conditions"
+    ],
+    "place": "nagapattinam",
+    "contains": [
+     "PFZ-A",
+     "PFZ-D",
+     "not recommended",
+     "hard geofence"
+    ]
+   }
+  },
+  {
+   "id": "pfz-closer",
+   "session": "f",
+   "tags": [
+    "core",
+    "pfz",
+    "followup"
+   ],
+   "query": "Which one is closer?",
+   "expect": {
+    "intent": "closer",
+    "place": "nagapattinam",
+    "contains": [
+     "PFZ-D: 29.6 km",
+     "not offered",
+     "PFZ-A is the closest zone"
+    ],
+    "not_contains": [
+     "PFZ-D is the closest"
+    ]
+   }
+  },
+  {
+   "id": "pfz-what-about-tomorrow",
+   "session": "f",
+   "tags": [
+    "core",
+    "pfz",
+    "followup"
+   ],
+   "query": "What about tomorrow?",
+   "expect": {
+    "intent": "pfz_zones",
+    "place": "nagapattinam",
+    "times": [
+     "06:00"
+    ],
+    "contains": [
+     "PFZ-A"
+    ]
+   }
+  },
+  {
+   "id": "nearest-hazards",
+   "session": "g",
+   "tags": [
+    "core",
+    "pfz",
+    "hazard"
+   ],
+   "query": "Find the nearest PFZ from Nagapattinam and check the hazards around it tomorrow morning.",
+   "expect": {
+    "intent": "nearest_pfz",
+    "tools": [
+     "get_pfz_candidates",
+     "hazards_near",
+     "get_advisories"
+    ],
+    "place": "nagapattinam",
+    "contains": [
+     "Nearest valid PFZ to Nagapattinam: PFZ-A",
+     "geographically nearest PFZ, PFZ-D",
+     "Hazard check within"
+    ]
+   }
+  },
+  {
+   "id": "nearest-there-conditions",
+   "session": "g",
+   "tags": [
+    "core",
+    "followup",
+    "conditions"
+   ],
+   "query": "What are the marine conditions there tomorrow morning?",
+   "expect": {
+    "intent": "sea_conditions",
+    "place": "PFZ-A",
+    "times": [
+     "06:00",
+     "08:00",
+     "10:00"
+    ],
+    "contains": [
+     "PFZ-A"
+    ]
+   }
+  },
+  {
+   "id": "route-two",
+   "session": "h",
+   "tags": [
+    "core",
+    "route"
+   ],
+   "query": "Give me two route options avoiding restricted areas from Nagapattinam tomorrow at 10 AM.",
+   "expect": {
+    "intent": "route",
+    "tools": [
+     "plan_routes",
+     "get_pfz_candidates"
+    ],
+    "place": "nagapattinam",
+    "times": [
+     "10:00"
+    ],
+    "contains": [
+     "Shortest",
+     "goes around it"
+    ],
+    "not_contains": [
+     "safest"
+    ]
+   }
+  },
+  {
+   "id": "route-check-prev",
+   "session": "h",
+   "tags": [
+    "core",
+    "route",
+    "geofence",
+    "followup"
+   ],
+   "query": "Does this route cross a restricted area?",
+   "expect": {
+    "intent": "route_check",
+    "tools": [
+     "check_route"
+    ],
+    "place": "nagapattinam",
+    "contains": [
+     "does not cross any hard geofence"
+    ]
+   }
+  },
+  {
+   "id": "route-check-straight",
+   "session": "i",
+   "tags": [
+    "core",
+    "route",
+    "geofence"
+   ],
+   "query": "Does this route cross a restricted area?",
+   "location": null,
+   "setup": [
+    "Show PFZ near Nagapattinam tomorrow morning."
+   ],
+   "expect": {
+    "intent": "route_check",
+    "tools": [
+     "check_route"
+    ],
+    "contains": [
+     "straight line"
+    ]
+   }
+  },
+  {
+   "id": "regions",
+   "session": "j",
+   "tags": [
+    "core",
+    "ocean"
+   ],
+   "query": "Which nearby regions have high chlorophyll and favourable SST?",
+   "setup": [
+    "Can I fish tomorrow at 6 AM from Nagapattinam?"
+   ],
+   "expect": {
+    "intent": "ocean_regions",
+    "tools": [
+     "get_ocean_conditions"
+    ],
+    "contains": [
+     "Criteria used",
+     "OP-A",
+     "OP-H",
+     "not a biological threshold"
+    ],
+    "not_contains": [
+     "OP-H: 0"
+    ]
+   }
+  },
+  {
+   "id": "compare",
+   "session": "k",
+   "tags": [
+    "core",
+    "scenario"
+   ],
+   "query": "Compare 6 AM and 10 AM tomorrow from Nagapattinam.",
+   "expect": {
+    "intent": "compare",
+    "place": "nagapattinam",
+    "times": [
+     "06:00",
+     "10:00"
+    ],
+    "contains": [
+     "LOWER RISK -> MODERATE CONDITIONS"
+    ]
+   }
+  },
+  {
+   "id": "scenario-evening",
+   "session": "l",
+   "tags": [
+    "core",
+    "scenario",
+    "followup"
+   ],
+   "query": "What changes if I leave in the evening?",
+   "setup": [
+    "Can I fish tomorrow at 6 AM from Nagapattinam?"
+   ],
+   "expect": {
+    "intent": "scenario",
+    "tools": [
+     "get_marine_weather",
+     "get_advisories"
+    ],
+    "place": "nagapattinam",
+    "times": [
+     "06:00",
+     "17:00",
+     "19:00"
+    ],
+    "contains": [
+     "only the departure time changes",
+     "LOWER RISK -> MODERATE CONDITIONS"
+    ]
+   }
+  },
+  {
+   "id": "why",
+   "session": "f",
+   "tags": [
+    "core",
+    "pfz",
+    "explain"
+   ],
+   "query": "Why did you recommend this zone?",
+   "expect": {
+    "intent": "why",
+    "contains": [
+     "Why PFZ-A",
+     "Ocean support 3/3",
+     "0.72 mg/m³"
+    ]
+   }
+  },
+  {
+   "id": "avoid",
+   "session": "m",
+   "tags": [
+    "core",
+    "geofence"
+   ],
+   "query": "Show areas I should avoid from Nagapattinam tomorrow at 10 AM.",
+   "expect": {
+    "intent": "avoid_areas",
+    "place": "nagapattinam",
+    "times": [
+     "10:00"
+    ],
+    "contains": [
+     "Naval firing-exercise area",
+     "High-exposure area"
+    ]
+   }
+  },
+  {
+   "id": "nearest-from-my-location",
+   "session": "n",
+   "tags": [
+    "core",
+    "pfz",
+    "location"
+   ],
+   "query": "Where is the nearest PFZ from my location?",
+   "location": {
+    "lat": 10.8,
+    "lon": 79.95
+   },
+   "expect": {
+    "intent": "nearest_pfz",
+    "place": "user",
+    "contains": [
+     "Nearest valid PFZ to your location: PFZ-A"
+    ]
+   }
+  },
+  {
+   "id": "ta-go",
+   "session": "o",
+   "tags": [
+    "core",
+    "tamil",
+    "conditions"
+   ],
+   "query": "நாளைக்கு காலை 6 மணிக்கு கடலுக்கு போகலாமா? நாகப்பட்டினம்",
+   "expect": {
+    "intent": "go_no_go",
+    "place": "nagapattinam",
+    "times": [
+     "06:00"
+    ],
+    "state": "LOWER_RISK",
+    "language": "ta",
+    "contains": [
+     "குறைந்த ஆபத்து",
+     "0.9 m"
+    ]
+   }
+  },
+  {
+   "id": "ta-pfz",
+   "session": "p",
+   "tags": [
+    "core",
+    "tamil",
+    "pfz"
+   ],
+   "query": "நாகப்பட்டினம் அருகில் மீன்பிடி மண்டலம் எங்கே?",
+   "expect": {
+    "intent": "pfz_zones",
+    "place": "nagapattinam",
+    "language": "ta",
+    "contains": [
+     "PFZ-A",
+     "37.8 km"
+    ]
+   }
+  },
+  {
+   "id": "safety-active-advisory",
+   "session": "q",
+   "tags": [
+    "core",
+    "safety",
+    "hazard"
+   ],
+   "query": "Find the nearest PFZ and check the hazards around it tomorrow at 2 PM from Nagapattinam.",
+   "expect": {
+    "intent": "nearest_pfz",
+    "place": "nagapattinam",
+    "times": [
+     "14:00"
+    ],
+    "contains": [
+     "Small-craft caution"
+    ],
+    "alert_class": "official"
+   }
+  },
+  {
+   "id": "safety-advisory-not-yet-valid",
+   "session": "r",
+   "tags": [
+    "core",
+    "safety",
+    "hazard"
+   ],
+   "query": "Find the nearest PFZ and check the hazards around it tomorrow at 8 AM from Nagapattinam.",
+   "expect": {
+    "intent": "nearest_pfz",
+    "place": "nagapattinam",
+    "times": [
+     "08:00"
+    ],
+    "not_contains": [
+     "Small-craft caution"
+    ],
+    "no_alert_class": "official"
+   }
+  },
+  {
+   "id": "safety-no-coverage",
+   "session": "s",
+   "tags": [
+    "core",
+    "safety",
+    "unavailable"
+   ],
+   "query": "Can I fish tomorrow at 6 AM from Chennai?",
+   "expect": {
+    "intent": "go_no_go",
+    "place": "chennai",
+    "state": "INSUFFICIENT_DATA",
+    "not_contains": [
+     "LOWER RISK"
+    ]
+   }
+  },
+  {
+   "id": "safety-offline-no-cache",
+   "session": "t",
+   "tags": [
+    "core",
+    "safety",
+    "unavailable"
+   ],
+   "mode": "OFFLINE",
+   "query": "Can I fish tomorrow at 6 AM from Nagapattinam?",
+   "expect": {
+    "status": "no_data",
+    "state": "INSUFFICIENT_DATA",
+    "contains": [
+     "cache"
+    ]
+   }
+  },
+  {
+   "id": "safety-live-no-network",
+   "session": "u",
+   "tags": [
+    "core",
+    "safety",
+    "unavailable"
+   ],
+   "mode": "LIVE",
+   "query": "Can I fish tomorrow at 6 AM from Nagapattinam?",
+   "expect": {
+    "status": "no_data",
+    "state": "INSUFFICIENT_DATA",
+    "not_contains": [
+     "0.9 m"
+    ]
+   }
+  },
+  {
+   "id": "incomplete-no-place",
+   "session": "v",
+   "tags": [
+    "core",
+    "incomplete"
+   ],
+   "query": "Can I fish tomorrow at 6 AM?",
+   "expect": {
+    "status": "needs_input",
+    "contains": [
+     "departure port"
+    ]
+   }
+  },
+  {
+   "id": "incomplete-gibberish",
+   "session": "w",
+   "tags": [
+    "core",
+    "incomplete"
+   ],
+   "query": "hello there",
+   "expect": {
+    "status": "needs_input",
+    "intent": "unknown"
+   }
+  },
+  {
+   "id": "incomplete-closer-no-context",
+   "session": "x",
+   "tags": [
+    "core",
+    "incomplete"
+   ],
+   "query": "Which one is closer?",
+   "expect": {
+    "intent": "closer",
+    "state": "INSUFFICIENT_DATA",
+    "contains": [
+     "no earlier PFZ list"
+    ]
+   }
+  },
+  {
+   "id": "para-boat-dawn",
+   "session": "y1",
+   "tags": [
+    "paraphrase"
+   ],
+   "query": "Is it okay to take my boat out at dawn tomorrow from Nagapattinam?",
+   "expect": {
+    "intent": "go_no_go",
+    "place": "nagapattinam"
+   }
+  },
+  {
+   "id": "para-rough-seas",
+   "session": "y2",
+   "tags": [
+    "paraphrase"
+   ],
+   "query": "Any rough seas expected tomorrow near Nagapattinam?",
+   "expect": {
+    "intent": "sea_conditions",
+    "place": "nagapattinam"
+   }
+  },
+  {
+   "id": "para-find-fish",
+   "session": "y3",
+   "tags": [
+    "paraphrase"
+   ],
+   "query": "Where will I find fish near Nagapattinam tomorrow?",
+   "expect": {
+    "intent": "pfz_zones",
+    "place": "nagapattinam"
+   }
+  },
+  {
+   "id": "para-closest-spot",
+   "session": "y4",
+   "tags": [
+    "paraphrase"
+   ],
+   "query": "Which fishing spot is closest to Nagapattinam?",
+   "expect": {
+    "intent": "nearest_pfz",
+    "place": "nagapattinam"
+   }
+  },
+  {
+   "id": "para-route-legal",
+   "session": "y5",
+   "tags": [
+    "paraphrase"
+   ],
+   "setup": [
+    "Give me two route options avoiding restricted areas from Nagapattinam tomorrow at 10 AM."
+   ],
+   "query": "Is that path allowed or does it go through a banned area?",
+   "expect": {
+    "intent": "route_check"
+   }
+  },
+  {
+   "id": "para-weather-worse",
+   "session": "y6",
+   "tags": [
+    "paraphrase"
+   ],
+   "query": "Will the weather get worse in the evening near Nagapattinam?",
+   "expect": {
+    "intent": "sea_conditions",
+    "place": "nagapattinam"
+   }
+  },
+  {
+   "id": "para-ta-sea",
+   "session": "y7",
+   "tags": [
+    "paraphrase",
+    "tamil"
+   ],
+   "query": "நாளை நாகப்பட்டினம் கடல் எப்படி இருக்கும்?",
+   "expect": {
+    "intent": "sea_conditions",
+    "place": "nagapattinam",
+    "language": "ta"
+   }
+  }
+ ]
+}

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SatQuery AI</title>
+<style>
+/* One file, no build step, no CDN: the GUI has to work on a laptop with no
+   network, which is the same constraint the rest of the stack runs under.
+
+   Appearance is three independent axes -- theme, palette, density -- each a
+   data-attribute on <html> and each remembered in localStorage. "auto" is
+   resolved to light or dark *in JavaScript* rather than by a media query, so
+   every dark rule is written once instead of three times (media query, explicit
+   toggle, and again per palette). The page is fetch-driven and needs JS anyway;
+   the cost of that choice is a light-mode render if scripting is off. */
+:root{
+  --bg:#f6f7f9; --panel:#fff; --ink:#16181d; --muted:#5b6472; --line:#e1e5ea;
+  --accent:#2f6fae; --ok:#1c7c4a; --warn:#9a6700; --bad:#b32d2e; --chip:#eef2f7;
+  --radius:10px;
+  /* density scale: every padding, gap and thumbnail reads from these five */
+  --pad:1rem; --gap:1.25rem; --card-pad:.6rem; --thumb:88px; --fs:15px;
+}
+:root[data-theme="dark"]{
+  --bg:#101216; --panel:#171a20; --ink:#e7e9ee; --muted:#9aa3b2; --line:#262b34;
+  --accent:#6ea8dc; --ok:#4cc38a; --warn:#d9a441; --bad:#f2696b; --chip:#1e222a;
+}
+/* "warm": paper and ochre instead of grey and blue. Same contrast targets,
+   different character -- useful when the default reads cold on a projector. */
+:root[data-palette="warm"]{
+  --bg:#f4f1ea; --panel:#fffdf9; --ink:#20242c; --muted:#6b6459; --line:#e0d9cc;
+  --accent:#b26a1f; --ok:#1f7a4d; --warn:#8a6100; --bad:#b3402d; --chip:#f2ece0;
+}
+:root[data-palette="warm"][data-theme="dark"]{
+  --bg:#0f1218; --panel:#161b24; --ink:#e8e4dc; --muted:#9a9384; --line:#26303c;
+  --accent:#e0a14a; --ok:#4cc38a; --warn:#d9a441; --bad:#f2696b; --chip:#1b2029;
+}
+:root[data-density="compact"]{
+  --pad:.6rem; --gap:.7rem; --card-pad:.4rem; --thumb:62px; --fs:13.5px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+     font:var(--fs)/1.5 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{padding:var(--pad) var(--gap);border-bottom:1px solid var(--line);
+       background:var(--panel);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+header h1{font-size:1.15rem;margin:0}
+header .sub{color:var(--muted);font-size:.85rem}
+header .spacer{flex:1}
+main{max-width:76rem;margin:0 auto;padding:var(--gap);display:grid;gap:var(--gap);
+     grid-template-columns:minmax(20rem,26rem) 1fr}
+@media (max-width:60rem){ main{grid-template-columns:1fr} }
+section{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+        padding:var(--pad)}
+h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+   margin:0 0 .75rem}
+h3{font-size:.95rem;margin:1.1rem 0 .4rem}
+label{display:block;font-size:.82rem;color:var(--muted);margin:.6rem 0 .2rem}
+input[type=file],select,textarea,input[type=text]{width:100%;padding:.5rem;
+  border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);
+  font:inherit}
+textarea{resize:vertical;min-height:4.5rem}
+button{font:inherit;padding:.5rem .9rem;border-radius:6px;border:1px solid var(--accent);
+       background:var(--accent);color:#fff;cursor:pointer}
+button.secondary{background:transparent;color:var(--accent)}
+button:disabled{opacity:.55;cursor:progress}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.chip{display:inline-block;padding:.12rem .5rem;border-radius:999px;background:var(--chip);
+      font-size:.75rem;border:1px solid var(--line)}
+.chip.ok{color:var(--ok)} .chip.warn{color:var(--warn)} .chip.bad{color:var(--bad)}
+.card{border:1px solid var(--line);border-radius:8px;padding:var(--card-pad);
+      margin:.5rem 0;display:flex;gap:.7rem}
+.card img{width:var(--thumb);height:var(--thumb);object-fit:cover;border-radius:6px;
+           border:1px solid var(--line)}
+.card .meta{font-size:.78rem;color:var(--muted);line-height:1.35}
+.answer{font-size:1.08rem;padding:.85rem 1rem;border-left:4px solid var(--accent);
+        background:var(--chip);border-radius:0 8px 8px 0;white-space:pre-wrap}
+.bar{height:.45rem;background:var(--line);border-radius:999px;overflow:hidden;margin:.35rem 0}
+.bar>i{display:block;height:100%;background:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:.83rem;margin:.4rem 0}
+th,td{border:1px solid var(--line);padding:.3rem .45rem;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600}
+code{background:var(--chip);padding:.05rem .3rem;border-radius:4px;font-size:.85em}
+details{margin:.5rem 0} summary{cursor:pointer;font-size:.85rem;color:var(--muted)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(11rem,1fr));gap:.6rem}
+.gallery figure{margin:0} .gallery img{width:100%;border-radius:6px;border:1px solid var(--line)}
+.gallery figcaption{font-size:.72rem;color:var(--muted);word-break:break-all}
+.hint{font-size:.8rem;color:var(--muted)}
+.err{color:var(--bad);font-size:.85rem}
+.examples button{background:transparent;color:var(--ink);border:1px dashed var(--line);
+                 font-size:.78rem;padding:.25rem .55rem}
+.status-dot{width:.5rem;height:.5rem;border-radius:50%;display:inline-block;background:var(--ok)}
+/* Appearance controls. Deliberately quiet: they are a convenience for whoever
+   is presenting, not part of the product being demonstrated. */
+.appearance{display:flex;gap:.35rem;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{background:transparent;color:var(--muted);border:0;border-radius:0;
+            padding:.15rem .5rem;font-size:.9rem;line-height:1.4}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--chip);color:var(--ink)}
+</style>
+</head>
+<body>
+<script>
+/* Applied before first paint so the page never flashes the wrong theme. Defines
+   the helpers the main script reuses when wiring the buttons. */
+window.uiPrefs = (function () {
+  const KEY = "satquery-ui";
+  const DEFAULTS = { theme: "auto", palette: "default", density: "comfortable" };
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function load() {
+    try { return Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem(KEY) || "{}")); }
+    catch (e) { return Object.assign({}, DEFAULTS); }   // private window, blocked storage
+  }
+  function save(prefs) {
+    try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) { /* not fatal */ }
+  }
+  function apply(prefs) {
+    const root = document.documentElement;
+    const dark = prefs.theme === "dark" || (prefs.theme === "auto" && media.matches);
+    root.dataset.theme = dark ? "dark" : "light";
+    root.dataset.palette = prefs.palette;
+    root.dataset.density = prefs.density;
+    return prefs;
+  }
+  const state = apply(load());
+  media.addEventListener("change", function () { if (state.theme === "auto") apply(state); });
+  return { state: state, load: load, save: save, apply: apply };
+})();
+</script>
+<header>
+  <h1>SatQuery AI</h1>
+  <span class="sub">agentic vision-language assistant for satellite imagery</span>
+  <span class="spacer"></span>
+  <span id="health" class="sub">checking…</span>
+  <div class="appearance" role="group" aria-label="Appearance">
+    <div class="seg" data-axis="theme">
+      <button type="button" data-value="light" title="Light" aria-label="Light theme">☀</button>
+      <button type="button" data-value="auto" title="Match the system" aria-label="System theme">◐</button>
+      <button type="button" data-value="dark" title="Dark" aria-label="Dark theme">☾</button>
+    </div>
+    <div class="seg" data-axis="palette">
+      <button type="button" data-value="default" title="Cool palette" aria-label="Cool palette">◆</button>
+      <button type="button" data-value="warm" title="Warm palette" aria-label="Warm palette">◈</button>
+    </div>
+    <div class="seg" data-axis="density">
+      <button type="button" data-value="comfortable" title="Comfortable spacing" aria-label="Comfortable spacing">≡</button>
+      <button type="button" data-value="compact" title="Compact spacing" aria-label="Compact spacing">▤</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ------------------------------------------------------------------ -->
+  <section id="inputs">
+    <h2>1 · Images</h2>
+    <label for="file">GeoTIFF, PNG or JPEG</label>
+    <input type="file" id="file" accept=".tif,.tiff,.png,.jpg,.jpeg,.npy" multiple>
+    <label for="modality">Modality (leave on auto unless the preview looks wrong)</label>
+    <select id="modality">
+      <option value="">auto — infer from the pixels</option>
+      <option value="optical">optical</option>
+      <option value="sar">SAR</option>
+    </select>
+    <div class="row" style="margin-top:.7rem">
+      <button id="upload">Register image(s)</button>
+      <button id="reset" class="secondary">Clear session</button>
+    </div>
+    <div id="upload-error" class="err"></div>
+
+    <h3>Registered</h3>
+    <div id="images"><p class="hint">Nothing registered yet.</p></div>
+    <div id="pair"></div>
+
+    <h2 style="margin-top:1.5rem">2 · Question</h2>
+    <textarea id="query" placeholder="What changed between these two dates?"></textarea>
+    <div class="row examples" style="margin:.5rem 0">
+      <button data-q="Describe this image.">describe</button>
+      <button data-q="How much of the scene is vegetation?">vegetation %</button>
+      <button data-q="Where is the water?">locate water</button>
+      <button data-q="What changed between the two dates?">change</button>
+      <button data-q="What land cover types are present?">land cover</button>
+    </div>
+    <button id="ask">Ask</button>
+
+    <h2 style="margin-top:1.5rem">Tool menu</h2>
+    <div id="menu"><p class="hint">Register an image to see which tools it supports.</p></div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section id="output">
+    <h2>Answer</h2>
+    <div id="answer"><p class="hint">No query has been run in this session yet.</p></div>
+    <div id="evidence"></div>
+    <div id="artifacts"></div>
+    <div id="trace"></div>
+  </section>
+</main>
+
+<script>
+const SESSION = new URLSearchParams(location.search).get("session") || "default";
+const api = (path, opts = {}) => fetch(path, {
+  ...opts,
+  headers: { "X-Session-Id": SESSION, ...(opts.headers || {}) },
+}).then(async (r) => {
+  const text = await r.text();
+  let data; try { data = JSON.parse(text); } catch { data = { error: text }; }
+  if (!r.ok) throw new Error(data.error || data.detail || r.statusText);
+  return data;
+});
+const el = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+let state = { images: [], pair: null, lastQuery: null };
+
+/* ---------------------------------------------------------------- health */
+api("/api/v1/health").then((h) => {
+  const b = h.backends || {};
+  const kind = (slot) => (b[slot] ? `${b[slot].backend}` : "?");
+  el("health").innerHTML =
+    `<span class="status-dot"></span> text <code>${esc(kind("text"))}</code> · ` +
+    `change <code>${esc(kind("change_map"))}</code> · ` +
+    `fusion <code>${esc(kind("fusion"))}</code> · ` +
+    `router <code>${esc(h.router ? h.router.primary : "?")}</code>`;
+  el("health").title = Object.entries(b)
+    .map(([k, v]) => `${k}: ${v.backend} — ${v.reason}`).join("\n");
+}).catch((e) => { el("health").textContent = "API unreachable: " + e.message; });
+
+/* ---------------------------------------------------------------- images */
+async function refreshImages() {
+  const data = await api("/api/v1/images");
+  state.images = data.images || [];
+  el("images").innerHTML = state.images.length
+    ? state.images.map(renderImage).join("")
+    : '<p class="hint">Nothing registered yet.</p>';
+  if (state.images.length === 2) {
+    const [a, b] = state.images;
+    try {
+      const pair = await api("/api/v1/pairs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_a: a.image_id, image_b: b.image_id }),
+      });
+      state.pair = pair;
+      const c = pair.check || {};
+      el("pair").innerHTML =
+        `<div class="card"><div class="meta"><b>Pair</b> <span class="chip ${c.ok ? "ok" : "bad"}">` +
+        `${esc(c.pair_type)}${c.ok ? "" : " · unusable"}</span><br>` +
+        `${(c.reasons || []).map(esc).join("<br>")}</div></div>`;
+    } catch (e) { el("pair").innerHTML = `<p class="err">${esc(e.message)}</p>`; }
+  } else { state.pair = null; el("pair").innerHTML = ""; }
+  refreshMenu();
+}
+
+function renderImage(r) {
+  const v = r.validation || {};
+  const s = v.summary || {};
+  const flags = [
+    `<span class="chip ${v.ok ? "ok" : "bad"}">${v.ok ? "valid" : "invalid"}</span>`,
+    `<span class="chip">${esc(v.modality)} ${(v.modality_confidence ?? 0).toFixed(2)}</span>`,
+    `<span class="chip">${s.bands}b ${s.width}×${s.height}</span>`,
+    s.crs ? `<span class="chip">${esc(s.crs)}</span>` : `<span class="chip warn">no CRS</span>`,
+  ].join(" ");
+  const notes = [...(v.errors || []), ...(v.warnings || [])].map(esc).join("<br>");
+  return `<div class="card">
+    <img src="/api/v1/images/${encodeURIComponent(r.image_id)}/preview?session=${encodeURIComponent(SESSION)}"
+         alt="preview" onerror="this.style.visibility='hidden'">
+    <div class="meta"><code>${esc(r.image_id)}</code> ${esc(r.original_name)}<br>
+      ${flags}${notes ? "<br>" + notes : ""}
+      <br><span class="hint">${esc((v.modality_reasons || [])[0] || "")}</span>
+    </div></div>`;
+}
+
+async function refreshMenu() {
+  try {
+    const data = await api("/api/v1/tools");
+    const menu = data.menu || { offered: [], withheld: [] };
+    el("menu").innerHTML =
+      `<div class="row">${menu.offered.map((t) => `<span class="chip ok">${esc(t)}</span>`).join("")}</div>` +
+      (menu.withheld.length
+        ? `<table><tr><th>withheld</th><th>reason</th></tr>` +
+          menu.withheld.map((w) => `<tr><td><code>${esc(w.tool)}</code></td><td>${esc(w.reason)}</td></tr>`).join("") +
+          `</table>`
+        : "");
+  } catch (e) { el("menu").innerHTML = `<p class="err">${esc(e.message)}</p>`; }
+}
+
+el("upload").onclick = async () => {
+  const input = el("file");
+  if (!input.files.length) { el("upload-error").textContent = "Choose a file first."; return; }
+  el("upload").disabled = true; el("upload-error").textContent = "";
+  try {
+    for (const file of input.files) {
+      const form = new FormData();
+      form.append("file", file);
+      const modality = el("modality").value;
+      if (modality) form.append("modality", modality);
+      await api("/api/v1/images", { method: "POST", body: form });
+    }
+    input.value = "";
+    await refreshImages();
+  } catch (e) { el("upload-error").textContent = e.message; }
+  finally { el("upload").disabled = false; }
+};
+
+el("reset").onclick = async () => {
+  await api(`/api/v1/sessions/${encodeURIComponent(SESSION)}`, { method: "DELETE" });
+  state = { images: [], pair: null, lastQuery: null };
+  el("images").innerHTML = '<p class="hint">Nothing registered yet.</p>';
+  el("pair").innerHTML = ""; el("answer").innerHTML = '<p class="hint">Session cleared.</p>';
+  el("evidence").innerHTML = ""; el("artifacts").innerHTML = ""; el("trace").innerHTML = "";
+  refreshMenu();
+};
+
+document.querySelectorAll(".examples button").forEach((b) => {
+  b.onclick = () => { el("query").value = b.dataset.q; };
+});
+
+/* ----------------------------------------------------------------- query */
+el("ask").onclick = async () => {
+  const query = el("query").value.trim();
+  if (!query) return;
+  el("ask").disabled = true;
+  el("answer").innerHTML = '<p class="hint">Running: validate → prune → route → execute → compose…</p>';
+  el("evidence").innerHTML = el("artifacts").innerHTML = el("trace").innerHTML = "";
+  try {
+    const body = { query };
+    if (state.pair && state.pair.check && state.pair.check.ok) body.pair_id = state.pair.pair_id;
+    else body.image_ids = state.images.map((r) => r.image_id);
+    const result = await api("/api/v1/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    state.lastQuery = result;
+    renderResult(result);
+  } catch (e) { el("answer").innerHTML = `<p class="err">${esc(e.message)}</p>`; }
+  finally { el("ask").disabled = false; }
+};
+
+function renderResult(r) {
+  const pct = Math.round((r.confidence || 0) * 100);
+  const reportBase = `/api/v1/queries/${encodeURIComponent(r.query_id)}/report?session=${encodeURIComponent(SESSION)}`;
+  el("answer").innerHTML =
+    `<p class="answer">${esc(r.answer)}</p>
+     <div class="bar"><i style="width:${Math.max(2, pct)}%"></i></div>
+     <p class="hint">confidence ${(r.confidence || 0).toFixed(2)} · intent <code>${esc(r.intent || "—")}</code>
+        · ${r.duration_ms} ms · router <code>${esc((r.plan || {}).router || "—")}</code>
+        ${r.refused ? '· <span class="chip bad">refused</span>' : ""}</p>
+     ${(r.warnings || []).length ? `<p class="hint">${r.warnings.map(esc).join("<br>")}</p>` : ""}
+     <div class="row">
+       <a href="${reportBase}&format=pdf"><button class="secondary">Download PDF</button></a>
+       <a href="${reportBase}&format=md"><button class="secondary">Markdown</button></a>
+       <a href="${reportBase}&format=json"><button class="secondary">JSON</button></a>
+     </div>`;
+
+  const cites = r.citations || [];
+  el("evidence").innerHTML =
+    `<h3>Evidence behind the answer</h3>` +
+    (cites.length
+      ? `<table><tr><th>claim</th><th>measurement</th><th>value</th><th>tool</th></tr>` +
+        cites.map((c) => `<tr><td>${esc(c.claim)}</td><td><code>${esc(c.key)}</code></td>
+             <td>${esc(c.value)}</td><td>${esc(c.tool)}</td></tr>`).join("") + `</table>`
+      : `<p class="hint">No claim in this answer was tied to a measurement.</p>`);
+
+  const artifacts = Object.entries(r.artifacts || {});
+  el("artifacts").innerHTML = artifacts.length
+    ? `<h3>Overlays and maps</h3><div class="gallery">` +
+      artifacts.map(([name, url]) =>
+        `<figure><a href="${esc(url)}" target="_blank"><img src="${esc(url)}" alt="${esc(name)}"></a>
+         <figcaption>${esc(name)}</figcaption></figure>`).join("") + `</div>`
+    : "";
+
+  const trace = r.trace || { entries: [] };
+  const plan = r.plan || {};
+  el("trace").innerHTML =
+    `<h3>Execution trace</h3>
+     <p class="hint">${trace.n_steps || 0} steps · ${trace.total_ms || 0} ms
+       ${plan.fallback_reason ? `· <span class="chip warn">router fell back: ${esc(plan.fallback_reason)}</span>` : ""}</p>
+     <details open><summary>steps</summary>
+     <table><tr><th>step</th><th>name</th><th>status</th><th>ms</th><th>detail</th></tr>` +
+    (trace.entries || []).map((e) => {
+      const cls = { ok: "ok", error: "bad", withheld: "warn", skipped: "warn" }[e.status] || "";
+      return `<tr><td>${esc(e.step)}</td><td>${esc(e.name)}</td>
+        <td><span class="chip ${cls}">${esc(e.status)}</span></td>
+        <td>${e.duration_ms}</td><td>${esc(e.detail)}</td></tr>`;
+    }).join("") +
+    `</table></details>
+     <details><summary>tool outputs (raw JSON)</summary>
+       <pre style="overflow:auto;font-size:.75rem">${esc(JSON.stringify(r.tools || [], null, 2))}</pre>
+     </details>`;
+}
+
+/* ------------------------------------------------------------ appearance */
+document.querySelectorAll(".seg").forEach((group) => {
+  const axis = group.dataset.axis;
+  group.querySelectorAll("button").forEach((button) => {
+    button.onclick = () => {
+      window.uiPrefs.state[axis] = button.dataset.value;
+      window.uiPrefs.apply(window.uiPrefs.state);
+      window.uiPrefs.save(window.uiPrefs.state);
+      markAppearance();
+    };
+  });
+});
+
+function markAppearance() {
+  document.querySelectorAll(".seg").forEach((group) => {
+    const chosen = window.uiPrefs.state[group.dataset.axis];
+    group.querySelectorAll("button").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.value === chosen));
+    });
+  });
+}
+markAppearance();
+
+refreshImages().catch(() => {});
+</script>
+</body>
+</html>

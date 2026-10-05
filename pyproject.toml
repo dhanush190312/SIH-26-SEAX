@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satquery"
+version = "0.1.0"
+description = "SatQuery AI (agentic VLM assistant for satellite imagery) + ORCA (evidence-linked marine decision support, SIH26176)"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+# GeoTIFF / CRS handling. Without it, only PNG/JPEG "benchmark mode" works.
+raster = ["rasterio>=1.3", "pyproj>=3.6"]
+# Tabular dataset annotation files.
+data = ["pandas>=2.0", "pyyaml>=6.0", "pillow>=10.0", "tqdm>=4.66"]
+# GPU inference / fine-tuning (Colab/Kaggle T4: fp16 + sdpa only, never bf16).
+vlm = ["torch>=2.1", "transformers>=4.49", "accelerate>=0.30", "bitsandbytes>=0.43", "qwen-vl-utils"]
+# The HTTP API, the web app and the PDF report. reportlab rather than WeasyPrint:
+# WeasyPrint needs GTK/Pango installed system-wide on Windows.
+api = ["fastapi>=0.110", "uvicorn>=0.27", "python-multipart>=0.0.9", "reportlab>=4.0"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+satquery = "satquery.cli:main"
+orca = "orca.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["satquery*", "orca*"]
+
+# The GUI is one HTML file served by the API; without this it is missing from a
+# wheel and `satquery serve` shows a stub page.
+[tool.setuptools.package-data]
+satquery = ["api/*.html"]
+orca = ["api/*.html", "data/demo/*.json", "data/cache/.gitkeep"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

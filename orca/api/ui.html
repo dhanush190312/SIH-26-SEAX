@@ -1,0 +1,1495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEAX · Agentic Marine Intelligence · SIH26176</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SEAX ORCA — Premium White & Light Blue Theme
+   SIH26176 · INCOIS / MoES · Smart Fisheries Decision Support
+   ============================================================ */
+:root {
+  /* White & Light Blue Palette */
+  --bg-app:        #f8fafc;
+  --bg-subtle:     #f0f7ff;
+  --bg-card:       #ffffff;
+  --bg-card-hover: #f8fbff;
+  
+  /* Primary Ocean Blues */
+  --ocean-deep:    #0369a1;
+  --ocean-primary: #0284c7;
+  --ocean-light:   #38bdf8;
+  --ocean-surface: #e0f2fe;
+  --ocean-tint:    #f0f9ff;
+  
+  /* Text & Ink */
+  --ink-primary:   #0f172a;
+  --ink-secondary: #334155;
+  --ink-muted:     #64748b;
+  --ink-dim:       #94a3b8;
+  
+  /* Borders & Lines */
+  --border-subtle: #e2e8f0;
+  --border-blue:   #bae6fd;
+  --border-focus:  #38bdf8;
+  
+  /* Decision & Alert States */
+  --st-lower:      #059669;
+  --st-lower-bg:   #ecfdf5;
+  --st-lower-br:   #a7f3d0;
+  
+  --st-mod:        #d97706;
+  --st-mod-bg:     #fffbeb;
+  --st-mod-br:     #fde68a;
+  
+  --st-high:       #dc2626;
+  --st-high-bg:    #fef2f2;
+  --st-high-br:    #fecaca;
+  
+  --st-miss:       #4f46e5;
+  --st-miss-bg:    #eef2ff;
+  --st-miss-br:    #c7d2fe;
+  
+  /* Shadows */
+  --shadow-sm:     0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card:   0 4px 20px -2px rgba(2, 132, 199, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-float:  0 10px 30px -5px rgba(2, 132, 199, 0.15), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+  --radius-lg:     14px;
+  --radius-md:     10px;
+  --radius-sm:     6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Tamil", sans-serif;
+  background-color: var(--bg-app);
+  color: var(--ink-primary);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Subtle background accent */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; height: 320px;
+  background: radial-gradient(100% 100% at 50% 0%, #e0f2fe 0%, #f0f9ff 50%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── Top Header ── */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.65rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+}
+
+.brand-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ocean-deep);
+  letter-spacing: -0.02em;
+}
+
+.brand-tag {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.header-spacer { flex: 1; }
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ctrl-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--ink-secondary);
+  font-weight: 500;
+}
+
+select, input, button {
+  font: inherit;
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+select, input {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  color: var(--ink-primary);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.82rem;
+}
+
+select:focus, input:focus {
+  border-color: var(--ocean-primary);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+button {
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  color: var(--ink-secondary);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+button:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-blue);
+  color: var(--ocean-deep);
+}
+
+button.primary {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+
+button.primary:hover {
+  background: linear-gradient(135deg, #0369a1, #075985);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  transform: translateY(-1px);
+}
+
+button.primary:active { transform: translateY(0); }
+button:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ── Status Banner ── */
+#banner {
+  padding: 0.45rem 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+#banner.DEMO    { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+#banner.OFFLINE { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
+#banner.LIVE    { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+
+/* ── Alerts Container ── */
+#alerts { display: flex; flex-direction: column; }
+#alerts .al {
+  padding: 0.55rem 1.5rem;
+  font-size: 0.84rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+#alerts .al.critical { background: var(--st-high-bg); border-left: 4px solid var(--st-high); color: #991b1b; }
+#alerts .al.warning  { background: var(--st-mod-bg);  border-left: 4px solid var(--st-mod);  color: #92400e; }
+#alerts .al.info     { background: var(--st-miss-bg); border-left: 4px solid var(--st-miss); color: #3730a3; }
+
+.badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.b-official { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.b-source   { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.b-computed { background: #fae8ff; color: #86198f; border: 1px solid #f5d0fe; }
+
+/* ── Hero / Info Strip ── */
+.hero-strip {
+  padding: 1.25rem 1.5rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.hero-strip h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ocean-deep);
+  letter-spacing: -0.02em;
+}
+
+.hero-strip p {
+  color: var(--ink-muted);
+  font-size: 0.86rem;
+  margin-top: 0.15rem;
+}
+
+.hero-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag-pill {
+  background: #ffffff;
+  border: 1px solid var(--border-blue);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.76rem;
+  color: var(--ocean-deep);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ── Main Layout ── */
+main {
+  display: grid;
+  grid-template-columns: minmax(22rem, 32rem) 1fr;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  flex: 1;
+}
+
+@media (max-width: 980px) {
+  main { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.panel-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ocean-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Chat Container ── */
+#chat {
+  height: 25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+
+#chat::-webkit-scrollbar { width: 5px; }
+#chat::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+.msg {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  max-width: 95%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg.user {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  color: #ffffff;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.msg.orca {
+  background: var(--ocean-tint);
+  border: 1px solid var(--border-blue);
+  color: var(--ink-primary);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+.msg .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.45rem;
+}
+
+.chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  color: var(--ink-secondary);
+}
+
+.chip.state { border: none; color: #ffffff; font-weight: 700; }
+.s-LOWER_RISK          { background: var(--st-lower) !important; }
+.s-MODERATE_CONDITIONS { background: var(--st-mod) !important; }
+.s-HIGHER_RISK, .s-RESTRICTED { background: var(--st-high) !important; }
+.s-INSUFFICIENT_DATA   { background: var(--st-miss) !important; }
+
+.disc {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin-top: 0.45rem;
+  line-height: 1.4;
+}
+
+/* ── Quick Prompts & Follow-ups ── */
+.qp-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+}
+
+.qp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.qp-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ocean-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 0.25rem;
+}
+
+.qp-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-blue);
+  color: var(--ocean-deep);
+  border-radius: 999px;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.qp-btn:hover {
+  background: var(--ocean-surface);
+  border-color: var(--ocean-primary);
+  transform: translateY(-1px);
+}
+
+/* ── Input Box ── */
+#ask-form {
+  display: flex;
+  gap: 0.45rem;
+  background: #ffffff;
+  border: 2px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  padding: 0.35rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#ask-form:focus-within {
+  border-color: var(--ocean-primary);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+#q {
+  flex: 1;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  color: var(--ink-primary);
+  background: transparent;
+}
+
+#q::placeholder { color: var(--ink-dim); }
+
+.icon-btn {
+  padding: 0.4rem 0.65rem;
+  font-size: 1rem;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink-muted);
+}
+
+.icon-btn:hover {
+  background: var(--ocean-surface);
+  color: var(--ocean-deep);
+  border-color: var(--border-blue);
+}
+
+/* ── Interactive Map Panel ── */
+#mapwrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.layers-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  font-size: 0.78rem;
+  color: var(--ink-secondary);
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+  padding: 0.4rem 0.65rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-sm);
+}
+
+.layers-bar label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.layers-bar input[type="checkbox"] {
+  accent-color: var(--ocean-primary);
+  cursor: pointer;
+}
+
+#map-svg-wrap {
+  flex: 1;
+  min-height: 28rem;
+  background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(2, 132, 199, 0.08);
+  position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  min-height: 28rem;
+  display: block;
+}
+
+.legend {
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+  background: #ffffff;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Compare Collapsible ── */
+.compare-box {
+  margin-top: 0.65rem;
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  background: var(--ocean-tint);
+  overflow: hidden;
+}
+
+.compare-summary {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ocean-deep);
+  cursor: pointer;
+  user-select: none;
+}
+
+.compare-content {
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border-blue);
+  background: #ffffff;
+}
+
+/* ── Bottom Analysis Tabs Panel ── */
+.tabs-panel {
+  margin: 0 1.5rem 1.5rem;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.tabs-header {
+  display: flex;
+  gap: 0.35rem;
+  border-bottom: 2px solid var(--border-subtle);
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tab-btn {
+  border: none;
+  background: transparent;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--ocean-deep);
+  background: var(--ocean-tint);
+}
+
+.tab-btn.active {
+  color: var(--ocean-deep);
+  border-bottom-color: var(--ocean-primary);
+  background: var(--ocean-surface);
+}
+
+.hidden { display: none !important; }
+
+/* ── Evidence Cards & Content ── */
+.ev-card {
+  background: #ffffff;
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 0.85rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.ev-card .rec {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.ev-card .rec b {
+  font-size: 1.05rem;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--ink-primary);
+}
+
+.ev-sub {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin-bottom: 0.65rem;
+}
+
+.sec { margin: 0.75rem 0; }
+.sec h4 {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ocean-deep);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.ev-row {
+  display: grid;
+  grid-template-columns: 1.5rem 13rem 1fr;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed var(--border-subtle);
+  font-size: 0.84rem;
+  align-items: baseline;
+}
+
+.ev-row .ic { font-weight: 800; }
+.ev-row.ok .ic   { color: var(--st-lower); }
+.ev-row.warn .ic { color: var(--st-mod); }
+.ev-row.bad .ic  { color: var(--st-high); }
+.ev-row.missing .ic { color: var(--st-miss); }
+
+.ev-row .val small {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 0.74rem;
+  margin-top: 0.1rem;
+}
+
+.conflict-box {
+  background: var(--st-mod-bg);
+  border: 1px solid var(--st-mod-br);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  margin: 0.65rem 0;
+  font-size: 0.84rem;
+  color: #92400e;
+}
+
+.freshness-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+  margin: 0.65rem 0;
+  font-size: 0.78rem;
+}
+
+.freshness-grid div {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-blue);
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-sm);
+}
+
+.freshness-grid b { color: var(--ocean-deep); }
+
+/* ── WHY Chain ── */
+.why-stage {
+  border-left: 3px solid var(--ocean-primary);
+  background: var(--ocean-tint);
+  padding: 0.6rem 0.85rem;
+  margin: 0.35rem 0 0.35rem 0.5rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.why-arrow {
+  margin-left: 1rem;
+  color: var(--ocean-light);
+  font-weight: 800;
+}
+
+details summary {
+  cursor: pointer;
+  color: var(--ocean-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+pre {
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  padding: 0.65rem;
+  border-radius: var(--radius-sm);
+  overflow: auto;
+  max-height: 18rem;
+  font-size: 0.75rem;
+  color: var(--ink-secondary);
+}
+
+/* ── Tables ── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.82rem;
+  margin: 0.5rem 0;
+}
+
+th, td {
+  border: 1px solid var(--border-subtle);
+  padding: 0.45rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--bg-subtle);
+  color: var(--ocean-deep);
+  font-weight: 700;
+}
+
+/* ── Footer ── */
+footer {
+  background: #ffffff;
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem 1.5rem;
+  font-size: 0.76rem;
+  color: var(--ink-muted);
+  text-align: center;
+  margin-top: auto;
+}
+
+footer a { color: var(--ocean-primary); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; }
+</style>
+</head>
+
+<body>
+
+<!-- Top Navigation -->
+<header>
+  <div class="brand-wrap">
+    <div class="brand-icon">🌊</div>
+    <div>
+      <div class="brand-title">SEAX · ORCA</div>
+      <div class="brand-tag">Agentic Marine Intelligence · SIH26176</div>
+    </div>
+  </div>
+  
+  <div class="header-spacer"></div>
+  
+  <div class="header-controls">
+    <label class="ctrl-item">
+      Mode
+      <select id="mode">
+        <option>DEMO</option>
+        <option>OFFLINE</option>
+        <option>LIVE</option>
+      </select>
+    </label>
+    
+    <label class="ctrl-item">
+      Language
+      <select id="lang">
+        <option value="">Auto (EN/தமிழ்)</option>
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+      </select>
+    </label>
+    
+    <button id="cache" title="Write OFFLINE cache from current data">💾 Refresh Cache</button>
+  </div>
+</header>
+
+<!-- Banner -->
+<div id="banner" class="DEMO">
+  <span>⚡</span> <span>DEMO DATA (synthetic) — Marine decision support for coastal operators & fishers</span>
+</div>
+
+<!-- Alerts Bar -->
+<div id="alerts"></div>
+
+<!-- Hero Info Strip -->
+<div class="hero-strip">
+  <div>
+    <h2>Coastal Decision Support & PFZ Intelligence</h2>
+    <p>Real-time evidence verification, hard geofence safety routing, and multi-source weather reasoning</p>
+  </div>
+  <div class="hero-tags">
+    <span class="tag-pill">🛡 136 Property Tests Passing</span>
+    <span class="tag-pill">📍 Bay of Bengal / Nagapattinam</span>
+    <span class="tag-pill">⚡ Dual Engine: Deterministic + Verified</span>
+  </div>
+</div>
+
+<!-- Main 2-Column Interface -->
+<main>
+  <!-- LEFT: Chat & Actions -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">💬 Marine AI Assistant</div>
+    </div>
+    
+    <div id="chat"></div>
+    
+    <div class="qp-container">
+      <div class="qp-row" id="qp"></div>
+      <div class="qp-row" id="fu"></div>
+    </div>
+    
+    <form id="ask-form" onsubmit="event.preventDefault();">
+      <input id="q" placeholder="Ask in English or தமிழ் (e.g. Can I fish tomorrow at 6 AM from Nagapattinam?)" autocomplete="off">
+      <button type="button" class="icon-btn" id="loc" title="Use my GPS location">📍</button>
+      <button type="button" class="icon-btn" id="mic" title="Voice Input">🎤</button>
+      <button type="submit" class="primary" id="send">Ask AI</button>
+    </form>
+    
+    <details class="compare-box">
+      <summary class="compare-summary">⚡ Quick Scenario Compare (What-If)</summary>
+      <div class="compare-content">
+        <select id="cday">
+          <option value="1">Tomorrow</option>
+          <option value="0">Today</option>
+        </select>
+        <select id="ch1"></select>
+        <span style="color:var(--ink-muted);font-weight:bold;">vs</span>
+        <select id="ch2"></select>
+        <button id="cmpgo" class="primary">Compare</button>
+      </div>
+    </details>
+  </section>
+
+  <!-- RIGHT: Interactive Ocean Map -->
+  <section class="panel" id="mapwrap">
+    <div class="panel-header">
+      <div class="panel-title">
+        🗺 Marine Geofence & Ocean Map
+        <span style="font-size:0.75rem;color:var(--ink-muted);font-weight:normal;" id="maptime"></span>
+      </div>
+    </div>
+    
+    <div class="layers-bar" id="layers"></div>
+    
+    <div id="map-svg-wrap">
+      <svg id="map" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    
+    <div class="legend" id="legend">
+      Ask a question to view PFZ candidates, weather hazards, navigation routes, and maritime geofences.
+    </div>
+  </section>
+</main>
+
+<!-- Bottom Tabs: Full Analysis -->
+<section class="tabs-panel">
+  <div class="tabs-header" id="tabs">
+    <button class="tab-btn active" data-t="cards">📋 Evidence Cards</button>
+    <button class="tab-btn" data-t="why">🔍 WHY THIS RESULT?</button>
+    <button class="tab-btn" data-t="evid">🔗 Evidence Panel</button>
+    <button class="tab-btn" data-t="compare">⚡ Time Compare</button>
+    <button class="tab-btn" data-t="trace">⚙ Execution Trace</button>
+    <div style="margin-left:auto;">
+      <a id="rep" class="hidden" target="_blank" style="font-size:0.8rem;font-weight:700;color:var(--ocean-primary);text-decoration:none;">📄 Printable Report</a>
+    </div>
+  </div>
+  
+  <div id="t-cards"></div>
+  <div id="t-why" class="hidden"></div>
+  <div id="t-evid" class="hidden"></div>
+  <div id="t-compare" class="hidden"></div>
+  <div id="t-trace" class="hidden"></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <b>SEAX · ORCA</b> — Marine Decision Support Assistant · Smart India Hackathon (SIH26176)<br>
+  Built with strictly verified evidence pipelines. Official <a href="https://incois.gov.in" target="_blank">INCOIS</a> and <a href="https://mausam.imd.gov.in" target="_blank">IMD</a> warnings always supersede automated advisories.
+</footer>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SID = "s" + Math.random().toString(36).slice(2, 8);
+let LAST = null, LOC = null;
+
+const STATE_COL = {
+  LOWER_RISK: "#059669",
+  MODERATE_CONDITIONS: "#d97706",
+  HIGHER_RISK: "#dc2626",
+  RESTRICTED: "#dc2626",
+  INSUFFICIENT_DATA: "#4f46e5"
+};
+
+/* ── Pure Map SVG Generator ── */
+function renderMapSVG(m, on) {
+  on = on || {};
+  const W = 900, H = 600;
+  if (!m || !m.bounds) {
+    return `<rect width="${W}" height="${H}" fill="#e0f2fe"/>
+            <text x="450" y="300" text-anchor="middle" fill="#0284c7" font-weight="600" font-size="16">
+              Ask a query to display real-time maritime features
+            </text>`;
+  }
+  
+  const [[s, w], [n, e]] = m.bounds;
+  const lat0 = (s + n) / 2, kx = Math.cos(lat0 * Math.PI / 180);
+  const dx = (e - w) * kx, dy = (n - s);
+  const sc = Math.min((W - 40) / dx, (H - 40) / dy), ox = (W - dx * sc) / 2, oy = (H - dy * sc) / 2;
+  const X = lon => ox + (lon - w) * kx * sc;
+  const Y = lat => oy + (n - lat) * sc;
+  const P = pts => pts.map(p => X(p[1]).toFixed(1) + "," + Y(p[0]).toFixed(1)).join(" ");
+  const kmpx = km => km / 110.574 * sc;
+  
+  let o = `<defs>
+    <pattern id="hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#dc2626" stroke-width="2.5" stroke-opacity="0.6"/>
+    </pattern>
+    <radialGradient id="water" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#bae6fd"/>
+    </radialGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#water)"/>`;
+  
+  // Grid lines
+  for (let la = Math.ceil(s * 2) / 2; la <= n; la += 0.5) {
+    o += `<line x1="0" x2="${W}" y1="${Y(la)}" y2="${Y(la)}" stroke="#0284c7" stroke-opacity="0.15" stroke-dasharray="3 3"/>
+          <text x="6" y="${Y(la) - 3}" font-size="10" font-weight="600" fill="#0369a1">${la.toFixed(1)}°N</text>`;
+  }
+  for (let lo = Math.ceil(w * 2) / 2; lo <= e; lo += 0.5) {
+    o += `<line y1="0" y2="${H}" x1="${X(lo)}" x2="${X(lo)}" stroke="#0284c7" stroke-opacity="0.15" stroke-dasharray="3 3"/>
+          <text y="${H - 6}" x="${X(lo) + 4}" font-size="10" font-weight="600" fill="#0369a1">${lo.toFixed(1)}°E</text>`;
+  }
+  
+  // Coastline & Land
+  if (m.land && m.land.length) {
+    o += `<polygon points="${P(m.land)}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5">
+            <title>Coastline (simplified)</title>
+          </polygon>`;
+  }
+  
+  // Active Advisories
+  if (on.advisories !== false) {
+    for (const a of m.advisories || []) {
+      o += `<polygon points="${P(a.polygon)}" fill="${a.active ? '#f59e0b' : 'none'}" fill-opacity="0.2" stroke="#d97706" stroke-dasharray="6 4" stroke-width="2">
+              <title>${esc(a.severity)} advisory ${a.active ? '(ACTIVE)' : '(inactive)'}: ${esc(a.text)}</title>
+            </polygon>`;
+    }
+  }
+  
+  // Geofences
+  if (on.geofences !== false) {
+    for (const f of (m.geofences && m.geofences.features) || []) {
+      const pr = f.properties, ring = f.geometry.coordinates[0].map(c => [c[1], c[0]]), hard = (m.binding || []).includes(pr.id);
+      o += `<polygon points="${P(ring)}" fill="${hard ? 'url(#hatch)' : 'none'}" fill-opacity="0.5" stroke="${hard ? '#dc2626' : '#64748b'}" stroke-width="2" ${hard ? '' : 'stroke-dasharray="4 4"'}>
+              <title>${esc(pr.name)} - ${esc(pr.kind)} - ${hard ? 'HARD CONSTRAINT' : 'advisory'}</title>
+            </polygon>`;
+    }
+  }
+  
+  // Weather / Hazards
+  if (on.hazards !== false) {
+    for (const g of m.weather_points || []) {
+      const c = STATE_COL[g.level] || "#64748b";
+      const r = g.level === "HIGHER_RISK" ? 8 : g.level === "MODERATE_CONDITIONS" ? 6 : 4.5;
+      o += `<circle cx="${X(g.lon)}" cy="${Y(g.lat)}" r="${r}" fill="${c}" stroke="#ffffff" stroke-width="1.5">
+              <title>${esc(g.id)}: wave ${g.wave_height ?? '?'} m, wind ${g.wind_speed ?? '?'} km/h - ${esc(g.level)}</title>
+            </circle>`;
+    }
+  }
+  
+  // PFZ Candidates
+  if (on.pfz !== false) {
+    for (const z of m.zones || []) {
+      const c = z.restricted ? "#dc2626" : z.recommended ? "#059669" : "#4f46e5";
+      o += `<circle cx="${X(z.lon)}" cy="${Y(z.lat)}" r="${Math.max(8, kmpx(z.radius_km))}" fill="${c}" fill-opacity="0.18" stroke="${c}" stroke-width="2" ${z.restricted ? 'stroke-dasharray="5 3"' : ''}>
+              <title>${esc(z.name)} - Ocean Support ${z.support}/3 - ${esc(z.state)}${z.restricted ? ' - GEOFENCE REJECTED' : ''}${z.recommended ? ' - RECOMMENDED' : ''}</title>
+            </circle>
+            <text x="${X(z.lon)}" y="${Y(z.lat) + 4.5}" font-size="11" text-anchor="middle" font-weight="800" fill="${c}">
+              ${esc(z.id.replace('PFZ-', ''))}
+            </text>`;
+    }
+  }
+  
+  // Routes
+  const RC = { shortest: "#0284c7", lower_exposure: "#059669", pfz_oriented: "#7c3aed", alternative: "#ea580c" };
+  if (on.routes !== false) {
+    (m.routes || []).forEach(r => {
+      if (r.identical_to) return;
+      o += `<polyline points="${P(r.path)}" fill="none" stroke="${RC[r.role] || '#1e293b'}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" ${r.role === 'alternative' ? 'stroke-dasharray="8 4"' : ''}>
+              <title>${esc(r.role)} route to ${esc(r.destination.name)}: ${r.distance_km} km</title>
+            </polyline>`;
+    });
+  }
+  
+  // Ocean Regions
+  if (on.regions !== false) {
+    for (const g of m.regions || []) {
+      const c = g.meets ? "#059669" : "#64748b";
+      const x = X(g.lon), y = Y(g.lat);
+      o += `<polygon points="${x},${y - 8} ${x + 8},${y} ${x},${y + 8} ${x - 8},${y}" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="2">
+              <title>Region ${esc(g.id)}: chl ${g.chlorophyll ?? '?'} mg/m³, SST ${g.sst ?? '?'} °C - ${g.meets ? 'Meets criteria' : 'Does not meet'}</title>
+            </polygon>`;
+    }
+  }
+  
+  // Buffer Circle
+  if (m.buffer) {
+    o += `<circle cx="${X(m.buffer.lon)}" cy="${Y(m.buffer.lat)}" r="${kmpx(m.buffer.radius_km)}" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="3 4">
+            <title>Analysis area: ${m.buffer.radius_km} km</title>
+          </circle>`;
+  }
+  
+  // Departure Pin
+  if (m.departure) {
+    o += `<g>
+            <circle cx="${X(m.departure.lon)}" cy="${Y(m.departure.lat)}" r="7" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
+            <text x="${X(m.departure.lon) + 10}" y="${Y(m.departure.lat) - 6}" font-size="12" font-weight="700" fill="#0f172a" stroke="#ffffff" stroke-width="3" paint-order="stroke">
+              ${esc(m.departure.name)}
+            </text>
+          </g>`;
+  }
+  
+  return o;
+}
+
+function drawMap() {
+  const m = LAST && LAST.map, on = {};
+  document.querySelectorAll("#layers input").forEach(i => on[i.dataset.l] = i.checked);
+  $("#map").innerHTML = renderMapSVG(m, on);
+  $("#maptime").textContent = m ? ("· Conditions at " + m.time.replace("T", " ")) : "";
+  const rs = (m && m.routes || []).filter(r => !r.identical_to);
+  const RC = { shortest: "#0284c7", lower_exposure: "#059669", pfz_oriented: "#7c3aed", alternative: "#ea580c" };
+  $("#legend").innerHTML = m ? (
+    '<b>Legend:</b> Dots = Sea state &nbsp;·&nbsp; Green PFZ = Recommended &nbsp;·&nbsp; Red hatched = Hard geofence &nbsp;·&nbsp; ' +
+    rs.map(r => `<b style="color:${RC[r.role]}">━ ${esc(r.role)}</b> (${r.distance_km} km)`).join(" · ")
+  ) : "Ask a query to display real-time maritime features.";
+}
+
+function mkLayers() {
+  $("#layers").innerHTML = [
+    ["hazards", "Sea State"],
+    ["pfz", "PFZ Zones"],
+    ["geofences", "Geofences"],
+    ["advisories", "Advisories"],
+    ["routes", "Routes"],
+    ["regions", "Ocean Regions"]
+  ].map(([k, l]) => `<label><input type="checkbox" data-l="${k}" checked> ${l}</label>`).join("");
+  $("#layers").onchange = drawMap;
+}
+
+/* ── Evidence Cards ── */
+const IC = { ok: "✓", warn: "!", bad: "✗", missing: "?", info: "·" };
+
+function cardHTML(c) {
+  let h = `<div class="ev-card">
+    <div class="rec">
+      <span class="chip state s-${c.recommendation.state}">${esc(c.recommendation.label)}</span>
+      <b>${esc(c.recommendation.headline)}</b>
+    </div>
+    <div class="ev-sub">${esc(c.title)} · ${esc(c.mode_label)}</div>`;
+  
+  for (const s of c.sections) {
+    h += `<div class="sec"><h4>${esc(s.title)}</h4>`;
+    for (const r of s.rows) {
+      const fr = r.freshness_hours != null ? ` · ${r.freshness_hours} h old` : "";
+      h += `<div class="ev-row ${r.status}">
+        <span class="ic">${IC[r.status] || "·"}</span>
+        <span>${esc(r.label)}</span>
+        <span class="val">
+          <b>${esc(r.text)}</b>
+          <small>${[r.source, r.valid_time && ("valid " + r.valid_time), r.offset_km != null && (r.offset_km + " km from point")].filter(Boolean).map(esc).join(" · ")}${fr}${r.note ? " · " + esc(r.note) : ""}</small>
+        </span>
+      </div>`;
+    }
+    h += `</div>`;
+  }
+  
+  for (const cf of c.conflicts) {
+    h += `<div class="conflict-box"><b>⚠ ${esc(cf.headline)}</b><br>${cf.lines.map(esc).join("<br>")}<br>${esc(cf.selected_line)}<br>${esc(cf.difference_line)}</div>`;
+  }
+  
+  for (const sv of c.sensitivity) {
+    if (sv.changes_decision) {
+      h += `<div class="conflict-box"><b>Decision sensitivity to source:</b> ${esc(sv.selected_source)} ${sv.selected_value} ${esc(sv.unit)} → ${esc(sv.state_with_selected)}; ${esc(sv.alternative_source)} ${sv.alternative_value} ${esc(sv.unit)} → ${esc(sv.state_with_alternative)}</div>`;
+    }
+  }
+  
+  h += '<div class="freshness-grid">' + Object.entries(c.freshness).map(([k, v]) =>
+    `<div><b>${k}</b><br>${esc(v.text)}${v.source ? "<br><small>" + esc(v.source) + "</small>" : ""}</div>`
+  ).join("") + '</div>';
+  
+  if (c.missing.length || c.stale.length) {
+    h += `<div class="ev-sub" style="color:var(--st-mod);font-weight:600;">${c.missing.length ? "Missing: " + esc(c.missing.join(", ")) : ""} ${c.stale.length ? "Stale: " + esc(c.stale.join(", ")) : ""}</div>`;
+  }
+  
+  h += `<div class="ev-sub"><b>Sources cited:</b> ${c.sources.map(esc).join(" · ") || "none"}</div></div>`;
+  return h;
+}
+
+function showCards() {
+  if (!LAST) return;
+  const cs = LAST.cards && LAST.cards.length ? LAST.cards : [];
+  $("#t-cards").innerHTML = (cs.length ? cs.map(cardHTML).join("") : '<div class="ev-sub">No structured evidence card generated.</div>') + extraHTML();
+}
+
+function extraHTML() {
+  let h = "";
+  const r = LAST;
+  if (r.routes && r.routes.routes && r.routes.routes.length) {
+    h += `<h4 style="color:var(--ocean-deep);margin:0.75rem 0 0.4rem;">Navigation Route Options</h4>
+    <table><tr><th>Route</th><th>Destination</th><th>Distance</th><th>Duration</th><th>Max Exposure</th><th>Mean</th><th>Detour Note</th><th>Criteria</th></tr>` +
+    r.routes.routes.map(x => x.feasible ?
+      `<tr><td><b>${esc(x.role)}</b>${x.identical_to ? " (= " + esc(x.identical_to) + ")" : ""}</td><td>${esc(x.destination.name)}</td><td>${x.distance_km} km</td><td>${x.duration_h} h</td><td>${x.max_exposure ?? "n/a"}</td><td>${x.mean_exposure ?? "n/a"}</td><td>${x.direct_blocked_by.length ? "via " + esc(x.direct_blocked_by.join(",")) + " (+" + x.detour_km + " km)" : "direct"}</td><td>${esc(x.criteria)}</td></tr>` :
+      `<tr><td>${esc(x.role || x.objective)}</td><td colspan="7">No route: ${esc(x.reason)}</td></tr>`
+    ).join("") + `</table><div class="ev-sub">${esc(r.routes.note || "")} (Exposure index: 1.0 = higher-risk threshold)</div>`;
+  }
+  
+  if (r.zones && r.zones.length) {
+    h += `<h4 style="color:var(--ocean-deep);margin:0.75rem 0 0.4rem;">PFZ Candidates Evaluation</h4>
+    <table><tr><th>Rank</th><th>Zone</th><th>Distance</th><th>Ocean Support</th><th>State</th><th>Recommendation</th></tr>` +
+    r.zones.map(z => `<tr><td>#${z.rank}</td><td><b>${esc(z.zone.name)}</b></td><td>${z.relation.distance_km} km ${z.relation.direction}</td><td>${z.support.met}/3</td><td>${esc(z.state)}</td><td>${z.recommended ? "<b style='color:var(--st-lower)'>✓ Recommended</b>" : "<span style='color:var(--st-high)'>✗ " + esc((z.why_key || "").replace("why.", "")) + "</span>"}</td></tr>`).join("") + `</table>`;
+  }
+  
+  if (r.route_check && r.route_check.length) {
+    h += `<h4 style="color:var(--ocean-deep);margin:0.75rem 0 0.4rem;">Route Restriction & Geofence Check</h4>
+    <table><tr><th>Route</th><th>Legs</th><th>Hard Crossings</th><th>Land</th><th>Active Advisories</th><th>Advisory Geofences</th><th>Outcome</th></tr>` +
+    r.route_check.map(x => `<tr><td><b>${esc(x.label)}</b></td><td>${x.n_legs}</td><td>${x.hard_crossings.length ? esc(x.hard_crossings.map(c => c.id).join(", ")) : "none"}</td><td>${x.land_legs.length ? "yes" : "no"}</td><td>${x.advisories.length ? esc(x.advisories.map(a => a.advisory_id).join(", ")) : "none"}</td><td>${x.soft_crossings.length ? esc(x.soft_crossings.map(c => c.id).join(", ")) : "none"}</td><td><b>${x.ok ? "<span style='color:var(--st-lower)'>✓ Safe Path</span>" : "<span style='color:var(--st-high)'>⛔ Restricted</span>"}</b></td></tr>`).join("") + `</table>`;
+  }
+  
+  if (r.regions && r.regions.length) {
+    h += `<h4 style="color:var(--ocean-deep);margin:0.75rem 0 0.4rem;">Ocean Regions (Chlorophyll & SST Screening)</h4>
+    <table><tr><th>Region</th><th>Distance</th><th>Chlorophyll</th><th>SST</th><th>Gradient</th><th>Criteria Result</th></tr>` +
+    r.regions.map(x => `<tr><td><b>${esc(x.name)}</b></td><td>${x.distance_km} km ${x.direction}</td><td>${x.chlorophyll ?? "?"} mg/m³ ${x.chl_ok ? "✓" : "✗"}</td><td>${x.sst ?? "?"} °C ${x.sst_ok ? "✓" : "✗"}</td><td>${x.sst_gradient ?? "?"}</td><td><b>${x.meets ? "<span style='color:var(--st-lower)'>✓ Meets Criteria</span>" : x.restricted ? "<span style='color:var(--st-high)'>⛔ Excluded</span>" : "<span style='color:var(--ink-muted)'>✗ Below threshold</span>"}</b></td></tr>`).join("") + `</table>`;
+  }
+  return h;
+}
+
+/* ── Alerts, Evidence, WHY & Trace ── */
+const CLS = {
+  official: ["OFFICIAL", "b-official"],
+  source: ["SOURCE DATA", "b-source"],
+  computed: ["SEAX-COMPUTED", "b-computed"]
+};
+
+function showAlerts() {
+  $("#alerts").innerHTML = (LAST && LAST.alerts || []).map(a =>
+    `<div class="al ${a.level}"><b>${a.level === "critical" ? "⛔" : a.level === "warning" ? "⚠" : "ℹ"}</b><span class="badge ${CLS[a.class][1]}">${CLS[a.class][0]}</span><span>${esc(a.text)}</span></div>`
+  ).join("");
+}
+
+function showEvid() {
+  if (!LAST) return;
+  const L = LAST.evidence_linkage, recs = LAST.evidence_records || [];
+  let h = `<div class="ev-sub" style="margin-bottom:0.75rem;">
+    <b>${recs.length} Evidence Records</b> · ${L.n_linked}/${L.n_factual} factual claims verified against source data.
+  </div><h4 style="color:var(--ocean-deep);margin-bottom:0.4rem;">Answer Breakdown</h4>`;
+  
+  h += L.sentences.map(s =>
+    `<div style="padding:0.4rem 0.6rem;margin:0.25rem 0;background:#ffffff;border:1px solid ${s.factual && !s.linked ? 'var(--st-high)' : 'var(--border-subtle)'};border-radius:6px;font-size:0.84rem;">
+      ${esc(s.sentence)}
+      <small style="display:block;color:var(--ink-muted);font-size:0.72rem;margin-top:0.2rem;">
+        ${s.factual ? (s.linked ? "Linked evidence: " + s.evidence.join(", ") : "⚠ NO LINKED RECORD") : "Framing (no factual claim)"}
+      </small>
+    </div>`
+  ).join("");
+  
+  h += `<h4 style="color:var(--ocean-deep);margin:0.85rem 0 0.4rem;">Underlying Evidence Ledger</h4>` +
+    recs.map(r =>
+      `<div style="padding:0.35rem 0;border-bottom:1px solid var(--border-subtle);font-size:0.82rem;">
+        <b>${r.id}</b> <span class="badge ${CLS[r.class][1]}">${CLS[r.class][0]}</span> ${esc(r.claim)}
+        <small style="display:block;color:var(--ink-muted);font-size:0.72rem;">Source: ${esc(r.source || "n/a")} · Operation: ${esc(r.operation)} · Output: ${esc(JSON.stringify(r.result))}</small>
+      </div>`
+    ).join("");
+  $("#t-evid").innerHTML = h;
+}
+
+function showWhy() {
+  if (!LAST) return;
+  $("#t-why").innerHTML = LAST.why.map((s, i) =>
+    `<div class="why-stage"><b>${i + 1}. ${esc(s.stage)}</b>
+      <details ${i === 0 || i === 6 || i === 7 ? "open" : ""}>
+        <summary>Inspect stage details</summary>
+        <pre>${esc(JSON.stringify(s.content, null, 2))}</pre>
+      </details>
+    </div>${i < LAST.why.length - 1 ? '<div class="why-arrow">↓</div>' : ""}`
+  ).join("") + `<div class="ev-sub" style="margin-top:0.75rem;">Trace generated dynamically for query ${esc(LAST.query_id)}.</div>`;
+}
+
+function showCompare() {
+  const c = LAST && LAST.comparison;
+  if (!c) {
+    $("#t-compare").innerHTML = '<div class="ev-sub">Execute "Compare 6 AM and 10 AM" or use the quick scenario compare tool.</div>';
+    return;
+  }
+  $("#t-compare").innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:0.75rem;">' +
+    c.map(x => `<div class="ev-card">
+      <h3 style="color:var(--ocean-deep);font-size:0.95rem;margin-bottom:0.4rem;">${esc(x.label)}</h3>
+      <span class="chip state s-${x.state}">${esc(x.state)}</span>
+      <div style="margin-top:0.5rem;font-size:0.84rem;line-height:1.6;">
+        💨 Wind: <b>${x.wind ? x.wind.value + " " + x.wind.unit : "INSUFFICIENT DATA"}</b><br>
+        🌊 Wave Height: <b>${x.wave ? x.wave.value + " " + x.wave.unit : "INSUFFICIENT DATA"}</b><br>
+        ⚡ Hazards: <b>${x.hazards.length ? esc(x.hazards.join("; ")) : "None active"}</b><br>
+        🎯 Recommended PFZ: <b>${x.pfz ? esc(x.pfz.zone) + " (" + x.pfz.support + "/3)" : "None"}</b>
+        ${x.conflicts.length ? "<br><span style='color:var(--st-mod)'>⚠ Source disagreement: " + esc(x.conflicts.join(",")) + "</span>" : ""}
+      </div>
+    </div>`).join("") + '</div>';
+}
+
+function showTrace() {
+  if (!LAST) return;
+  const t = LAST.trace;
+  $("#t-trace").innerHTML = `<div class="ev-sub" style="margin-bottom:0.65rem;">
+    <b>${t.n_steps} Pipeline Steps</b> · ${t.total_ms.toFixed(1)} ms execution · Query ID: ${esc(t.query_id)}
+  </div>
+  <table><tr><th>#</th><th>Step</th><th>Tool / Agent</th><th>Status</th><th>Latency (ms)</th><th>Outputs</th></tr>` +
+  t.entries.map((e, i) =>
+    `<tr><td>${i + 1}</td><td>${esc(e.step)}</td><td><b>${esc(e.name)}</b></td><td>${esc(e.status)}</td><td>${e.duration_ms}</td><td>${esc(e.detail)}<details><summary>Details</summary><pre>${esc(JSON.stringify({params: e.params, output: e.output}, null, 2))}</pre></details></td></tr>`
+  ).join("") + `</table>`;
+}
+
+function refreshTabs() {
+  showAlerts(); showEvid(); showCards(); showWhy(); showCompare(); showTrace(); drawMap();
+  const a = $("#rep");
+  a.classList.remove("hidden");
+  a.href = "/api/orca/report/" + LAST.query_id;
+  a.textContent = "📄 Printable Report (" + LAST.query_id + ")";
+}
+
+/* ── Chat Interactions ── */
+function addMsg(cls, html) {
+  const d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.innerHTML = html;
+  $("#chat").appendChild(d);
+  $("#chat").scrollTop = 1e9;
+  return d;
+}
+
+function setBanner(label, mode) {
+  const b = $("#banner");
+  b.className = mode;
+  b.innerHTML = `<span>⚡</span> <span>${esc(label)} ${mode === "DEMO" ? "— All synthetic values are illustrative" : ""}</span>`;
+}
+
+async function post(path, body) {
+  const r = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+function renderResult(r) {
+  LAST = r;
+  setBanner(r.mode_label, r.mode);
+  const it = r.interpretation || {};
+  const INT = it.intent ? `<div class="disc">Parsed intent: <b>${esc(it.intent)}</b>${it.place ? " · Place: <b>" + esc(it.place) + "</b>" : ""}${it.time_label ? " · Time: <b>" + esc(it.time_label) + "</b>" : ""}</div>` : "";
+  
+  const m = addMsg("orca", `
+    <div class="meta">
+      <span class="chip state s-${r.state}">${esc(r.state_label)}</span>
+      <span class="chip">${esc(r.mode_label)}</span>
+      <span class="chip">${esc(r.intent)} · ${esc(r.language)}</span>
+    </div>
+    ${esc(r.answer)}
+    ${r.warnings.map(w => "<div class='disc' style='color:var(--st-mod)'>⚠ " + esc(w) + "</div>").join("")}
+    ${INT}
+    <div class="disc">${esc(r.disclaimer)} · ${r.verification.ok ? "<span style='color:var(--st-lower)'>✓ Verified against evidence</span>" : "<span style='color:var(--st-high)'>✗ Verification failed</span>"}</div>
+    <div style="margin-top:0.6rem;display:flex;gap:0.4rem;flex-wrap:wrap;">
+      <button data-go="why" class="qp-btn">🔍 WHY THIS RESULT?</button>
+      <button data-go="cards" class="qp-btn">📋 Evidence Cards</button>
+      <button data-go="trace" class="qp-btn">⚙ Trace</button>
+    </div>
+  `);
+  
+  m.querySelectorAll("button[data-go]").forEach(b => {
+    b.onclick = () => {
+      setTab(b.dataset.go);
+      document.querySelector(".tabs-panel").scrollIntoView({ behavior: "smooth" });
+    };
+  });
+  
+  refreshTabs();
+  if (r.comparison) setTab("compare");
+  else if ($(".tab-btn.active").dataset.t === "compare") setTab("cards");
+}
+
+async function ask(text) {
+  if (!text.trim()) return;
+  addMsg("user", esc(text));
+  $("#send").disabled = true;
+  const w = addMsg("orca", "🌊 Orchestrating marine intelligence agents…");
+  try {
+    const r = await post("/api/orca/query", {
+      text,
+      session_id: SID,
+      mode: $("#mode").value,
+      lang: $("#lang").value || undefined,
+      location: LOC || undefined
+    });
+    w.remove();
+    renderResult(r);
+  } catch (e) {
+    w.textContent = "Error: " + e.message;
+  } finally {
+    $("#send").disabled = false;
+  }
+}
+
+function setTab(t) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.t === t));
+  ["cards", "why", "evid", "compare", "trace"].forEach(k => $("#t-" + k).classList.toggle("hidden", k !== t));
+}
+
+async function init() {
+  mkLayers();
+  
+  // Tab click bindings
+  document.querySelectorAll(".tab-btn").forEach(b => b.onclick = () => setTab(b.dataset.t));
+  
+  // Form submit
+  $("#ask-form").onsubmit = e => {
+    e.preventDefault();
+    const q = $("#q").value.trim();
+    if (q) {
+      $("#q").value = "";
+      ask(q);
+    }
+  };
+  
+  // Hours dropdown
+  const hrs = [...Array(24).keys()].map(h => `<option value="${h}">${String(h).padStart(2, "0")}:00</option>`).join("");
+  $("#ch1").innerHTML = hrs; $("#ch2").innerHTML = hrs;
+  $("#ch1").value = 6; $("#ch2").value = 10;
+  
+  // Quick Compare
+  $("#cmpgo").onclick = async () => {
+    const base = new Date(); base.setHours(0, 0, 0, 0);
+    const d = +$("#cday").value;
+    const mk = h => {
+      const x = new Date(base);
+      x.setDate(x.getDate() + d);
+      x.setHours(h);
+      const p = n => String(n).padStart(2, "0");
+      return `${x.getFullYear()}-${p(x.getMonth() + 1)}-${p(x.getDate())}T${p(h)}:00:00`;
+    };
+    addMsg("user", `Compare ${$("#ch1").value}:00 vs ${$("#ch2").value}:00`);
+    try {
+      renderResult(await post("/api/orca/compare", {
+        place: "Nagapattinam",
+        times: [mk(+$("#ch1").value), mk(+$("#ch2").value)],
+        mode: $("#mode").value,
+        session_id: SID,
+        lang: $("#lang").value || "en"
+      }));
+    } catch (e) {
+      addMsg("orca", "Error: " + e.message);
+    }
+  };
+  
+  // Cache Refresh
+  $("#cache").onclick = async () => {
+    try {
+      const j = await post("/api/orca/cache/refresh", {});
+      addMsg("orca", `💾 Offline cache refreshed (${j.origin_mode} mode). Ready for offline use.`);
+    } catch (e) {
+      addMsg("orca", "Cache error: " + e.message);
+    }
+  };
+  
+  // Mode switch
+  $("#mode").onchange = async () => {
+    const h = await (await fetch("/api/orca/health")).json();
+    const mm = $("#mode").value;
+    const info = h.modes[mm];
+    setBanner(info && info.label ? info.label : mm + " mode", mm);
+  };
+  
+  // Load Scenarios
+  try {
+    const sc = await (await fetch("/api/orca/scenarios")).json();
+    $("#qp").innerHTML = '<span class="qp-label">Scenarios:</span> ' +
+      sc.scenarios.map(s => `<button type="button" class="qp-btn" data-q="${esc(s.text)}">${esc(s.label)}</button>`).join("");
+    $("#qp").querySelectorAll("button").forEach(b => b.onclick = () => ask(b.dataset.q));
+    
+    $("#fu").innerHTML = '<span class="qp-label">Follow-ups:</span> ' +
+      sc.followups.map(s => `<button type="button" class="qp-btn" data-q="${esc(s.text)}">${esc(s.label)}</button>`).join("");
+    $("#fu").querySelectorAll("button").forEach(b => b.onclick = () => ask(b.dataset.q));
+  } catch (e) {}
+  
+  // Geolocation
+  $("#loc").onclick = () => {
+    if (LOC) {
+      LOC = null;
+      $("#loc").style.color = "";
+      addMsg("orca", "📍 Device location cleared.");
+      return;
+    }
+    if (!navigator.geolocation) {
+      addMsg("orca", "Geolocation not supported by browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(p => {
+      LOC = { lat: +p.coords.latitude.toFixed(4), lon: +p.coords.longitude.toFixed(4) };
+      $("#loc").style.color = "var(--st-lower)";
+      addMsg("orca", `📍 Active location: (${LOC.lat}, ${LOC.lon}). Note: Bundled demo coverage is around Nagapattinam.`);
+    }, e => addMsg("orca", "Could not read location: " + e.message));
+  };
+  
+  // Voice input
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    $("#mic").style.display = "none";
+  } else {
+    $("#mic").onclick = () => {
+      const r = new SR();
+      r.lang = $("#lang").value === "ta" ? "ta-IN" : "en-IN";
+      r.interimResults = false;
+      r.onresult = ev => { $("#q").value = ev.results[0][0].transcript; };
+      r.onerror = ev => addMsg("orca", "Voice recognition error: " + ev.error);
+      r.start();
+      $("#mic").style.color = "var(--ocean-primary)";
+      r.onend = () => $("#mic").style.color = "";
+    };
+  }
+  
+  // Welcome message
+  addMsg("orca", "👋 **Welcome to SEAX · ORCA** — Marine Decision Intelligence\nAsk questions about sea conditions, potential fishing zones (PFZ), maritime hazards, or route checks in English or தமிழ்.\n\nSelect a scenario button above or type your question below.");
+}
+
+init();
+</script>
+</body>
+</html>
